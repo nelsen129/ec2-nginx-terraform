@@ -15,6 +15,10 @@ data "aws_key_pair" "web" {
   key_name = var.key_pair
 }
 
+data "aws_ec2_instance_type" "web" {
+	instance_type = var.instance_type
+}
+
 resource "aws_security_group" "web" {
   name        = var.name
   description = "Allow SSH and HTTP inbound traffic and all outbound traffic"
@@ -49,7 +53,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_all" {
 
 resource "aws_instance" "web" {
   ami           = data.aws_ami.web.id
-  instance_type = var.instance_type
+  instance_type = data.aws_ec2_instance_type.web.instance_type
   key_name      = data.aws_key_pair.web.key_name
 
   subnet_id                   = data.aws_subnet.web.id
