@@ -56,6 +56,33 @@ resource "aws_instance" "web" {
   vpc_security_group_ids      = [aws_security_group.web.id]
   associate_public_ip_address = true
 
+  user_data_replace_on_change = true
+  user_data                   = <<EOF
+#!/bin/sh
+
+dnf install -y nginx
+
+cat <<EOT > /usr/share/nginx/html/index.html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hello!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Hi Randy!</h1>
+<p>This page is running via nginx.</p>
+</body>
+</html>
+EOT
+
+systemctl start nginx && systemctl enable nginx
+EOF
+
   tags = {
     Name = var.name
   }
