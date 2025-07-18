@@ -16,7 +16,7 @@ data "aws_key_pair" "web" {
 }
 
 data "aws_ec2_instance_type" "web" {
-	instance_type = var.instance_type
+  instance_type = var.instance_type
 }
 
 resource "aws_security_group" "web" {
